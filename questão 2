@@ -1,0 +1,90 @@
+//questão 2
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+char obterSexo();
+float obterSalario();
+int validaSalario(float salario);
+void classificaSalario(float salario, char *classificacao);
+void mostraClassificacao(float salario, char sexo, char *classificacao);
+void contaClassificacoes(float salario, int *abaixo, int *acima);
+
+int main() {
+    int numAssalariados, abaixoSalarioMinimo = 0, acimaSalarioMinimo = 0;
+
+    printf("Digite o número de assalariados: ");
+    scanf("%d", &numAssalariados);
+
+    for (int i = 0; i < numAssalariados; i++) {
+        char sexo = obterSexo();
+        float salario = obterSalario();
+
+        if (validaSalario(salario)) {
+            char classificacao[20];
+            classificaSalario(salario, classificacao);
+
+            mostraClassificacao(salario, sexo, classificacao);
+
+            contaClassificacoes(salario, &abaixoSalarioMinimo, &acimaSalarioMinimo);
+        } else {
+            printf("Salário inválido. Tente novamente.\n");
+            i--; 
+        }
+    }
+
+    printf("\nQuantidade de assalariados abaixo do salário mínimo: %d\n", abaixoSalarioMinimo);
+    printf("Quantidade de assalariados acima do salário mínimo: %d\n", acimaSalarioMinimo);
+
+    return 0;
+}
+
+char obterSexo() {
+    char sexo;
+    do {
+        printf("Digite o sexo (M/F): ");
+        scanf(" %c", &sexo);
+        sexo = toupper(sexo); 
+    } while (sexo != 'M' && sexo != 'F');
+    return sexo;
+}
+
+float obterSalario() {
+    float salario;
+    printf("Digite o salário: R$ ");
+    scanf("%f", &salario);
+    return salario;
+}
+
+int validaSalario(float salario) {
+    return salario > 1.0; 
+}
+
+void classificaSalario(float salario, char *classificacao) {
+    const float salarioMinimo = 1400.0;
+
+    if (salario < salarioMinimo) {
+        strcpy(classificacao, "Abaixo do salário mínimo");
+    } else if (salario == salarioMinimo) {
+        strcpy(classificacao, "Igual ao salário mínimo");
+    } else {
+        strcpy(classificacao, "Acima do salário mínimo");
+    }
+}
+
+void mostraClassificacao(float salario, char sexo, char *classificacao) {
+    printf("\nResultados:\n");
+    printf("Salário: R$ %.2f\n", salario);
+    printf("Classificação: %s\n", classificacao);
+    printf("Sexo: %s\n", (sexo == 'M') ? "Masculino" : "Feminino");
+}
+
+void contaClassificacoes(float salario, int *abaixo, int *acima) {
+    const float salarioMinimo = 1400.0;
+
+    if (salario < salarioMinimo) {
+        (*abaixo)++;
+    } else {
+        (*acima)++;
+    }
+}
